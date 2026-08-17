@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>چت خیلی خلاصه</title>
+</head>
+<body>
+    <input type="text" id="userInput" placeholder="اسم تو..." />
+    <input type="text" id="msgInput" placeholder="پیام..." />
+    <button onclick="send()">فرستادن</button>
+    <ul id="msgList"></ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+
+        // دریافت پیام از سرور و نمایش
+        connection.on("ReceiveMessage", (user, msg) => {
+            const li = document.createElement("li");
+            li.textContent = `${user}: ${msg}`;
+            document.getElementById("msgList").appendChild(li);
+        });
+
+        // شروع اتصال
+        connection.start();
+
+        // تابع ارسال
+        function send() {
+            const user = document.getElementById("userInput").value;
+            const msg = document.getElementById("msgInput").value;
+            connection.invoke("SendMessage", user, msg);
+            document.getElementById("msgInput").value = ''; // خالی کردن
+        }
+    </script>
+</body>
+</html>
