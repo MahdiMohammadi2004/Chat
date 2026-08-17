@@ -17,7 +17,16 @@ public class ChatRoomDto
     public int CreatedByUserId { get; set; }
     public string CreatedByUsername { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
-    public List<UserDto> Participants { get; set; } = new();
+    public List<ChatRoomParticipantDto> Participants { get; set; } = new();
+}
+
+public class ChatRoomParticipantDto
+{
+    public int Id { get; set; }
+    public int ChatRoomId { get; set; }
+    public int UserId { get; set; }
+    public DateTime JoinedAt { get; set; }
+    public UserDto User { get; set; } = null!;
 }
 
 public class MessageDto

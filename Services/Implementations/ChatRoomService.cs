@@ -152,7 +152,7 @@ public class ChatRoomService : IChatRoomService
                 .ThenInclude(p => p.User)
             .Include(cr => cr.CreatedByUser)
             .Where(cr => cr.Participants.Any(p => p.UserId == user.Id))
-            .OrderByDescending(cr => cr.Messages.OrderByDescending(m => m.SentAt).Select(m => m.SentAt).FirstOrDefault() ?? cr.CreatedAt)
+            .OrderByDescending(cr => cr.Messages.OrderByDescending(m => m.SentAt).Select(m => (DateTime?)m.SentAt).FirstOrDefault() ?? cr.CreatedAt)
             .ToListAsync();
 
         return _mapper.Map<List<ChatRoomDto>>(chatRooms);

@@ -13,7 +13,10 @@ public class MappingProfile : Profile
         
         CreateMap<ChatRoom, ChatRoomDto>()
             .ForMember(dest => dest.CreatedByUsername, opt => opt.MapFrom(src => src.CreatedByUser.Username))
-            .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => src.Participants.Select(p => p.User)));
+            .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => src.Participants.Select(p => p)));
+        
+        CreateMap<ChatRoomParticipant, ChatRoomParticipantDto>()
+            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User));
         
         CreateMap<Message, MessageDto>()
             .ForMember(dest => dest.SenderUsername, opt => opt.MapFrom(src => src.SenderUser.Username))
