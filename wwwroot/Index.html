@@ -1,37 +1,119 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>چت خیلی خلاصه</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Chat App</title>
+    <link rel="stylesheet" href="/css/chat.css">
 </head>
 <body>
-    <input type="text" id="userInput" placeholder="اسم تو..." />
-    <input type="text" id="msgInput" placeholder="پیام..." />
-    <button onclick="send()">فرستادن</button>
-    <ul id="msgList"></ul>
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-box">
+            <h2>Welcome to Chat App</h2>
+            <input type="text" id="usernameInput" placeholder="Enter your username..." maxlength="50">
+            <button id="loginBtn">Join Chat</button>
+        </div>
+    </div>
 
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>💬 Chat App</h3>
+                <div class="user-info" id="currentUserDisplay">Not logged in</div>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search users...">
+            </div>
+            
+            <div class="user-list" id="userList">
+                <!-- Users will be populated here -->
+            </div>
+            
+            <div class="chat-rooms-section">
+                <h4>My Chats</h4>
+                <div id="chatRoomsList">
+                    <!-- Chat rooms will be populated here -->
+                </div>
+                <button id="createGroupChatBtn" class="create-chat-btn">+ Create Group Chat</button>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main" id="chatMain">
+            <!-- Empty State -->
+            <div id="emptyChatView" class="empty-chat">
+                <div class="empty-chat-icon">💬</div>
+                <h3>Welcome to Chat App</h3>
+                <p>Select a chat from the sidebar or start a new conversation</p>
+            </div>
+
+            <!-- Active Chat View -->
+            <div id="activeChatView" style="display: none; flex-direction: column; height: 100%;">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="chat-header-info">
+                        <div class="chat-header-avatar" id="chatHeaderAvatar"></div>
+                        <div class="chat-header-details">
+                            <h3 id="chatHeaderName"></h3>
+                            <span class="chat-header-status" id="chatHeaderStatus"></span>
+                        </div>
+                    </div>
+                    <div class="chat-header-actions">
+                        <button id="leaveChatBtn" class="btn-leave" style="display: none;">Leave Chat</button>
+                    </div>
+                </div>
+
+                <!-- Messages Container -->
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Messages will be populated here -->
+                </div>
+
+                <!-- Typing Indicator -->
+                <div id="typingIndicator" class="typing-indicator" style="display: none;"></div>
+
+                <!-- Message Input -->
+                <div class="message-input-container">
+                    <form class="message-form" onsubmit="return false;">
+                        <input type="text" id="messageInput" class="message-input" placeholder="Type a message..." autocomplete="off">
+                        <button type="submit" id="sendBtn" class="send-btn">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Group Chat Modal -->
+    <div id="createGroupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Group Chat</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="groupNameInput">Group Name</label>
+                    <input type="text" id="groupNameInput" placeholder="Enter group name..." maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label>Select Participants</label>
+                    <div class="participant-list" id="participantsList">
+                        <!-- Checkboxes will be populated here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel close-modal">Cancel</button>
+                <button id="createGroupBtn" class="btn-primary">Create Group</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SignalR Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
-    <script>
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/chatHub")
-            .build();
-
-        // دریافت پیام از سرور و نمایش
-        connection.on("ReceiveMessage", (user, msg) => {
-            const li = document.createElement("li");
-            li.textContent = `${user}: ${msg}`;
-            document.getElementById("msgList").appendChild(li);
-        });
-
-        // شروع اتصال
-        connection.start();
-
-        // تابع ارسال
-        function send() {
-            const user = document.getElementById("userInput").value;
-            const msg = document.getElementById("msgInput").value;
-            connection.invoke("SendMessage", user, msg);
-            document.getElementById("msgInput").value = ''; // خالی کردن
-        }
-    </script>
+    <!-- Chat App JavaScript -->
+    <script src="/js/chat.js"></script>
 </body>
 </html>
